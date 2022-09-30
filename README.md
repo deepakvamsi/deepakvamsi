@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @deepakvamsi
-- 👀 I’m interested in python 
-- 🌱 I’m currently learning go and c++ 
+- 👀 I’m  build on python 
+- 🌱 I’m currently walking towards  go and c++ 
 - 💞️ I’m looking to collaborate on pandas
 
 
