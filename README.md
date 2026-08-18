@@ -1,7 +1,7 @@
 - 👋 Hi, I’m @deepakvamsi
 - 👀 I  build on python 
 - 🌱 I’m currently walking towards  ML 
-- 💞️ I’m looking to collaborate on pandas
+- 💞️ I’m looking to collaborate on go
 
 
 <!---
