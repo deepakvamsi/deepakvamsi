@@ -83,6 +83,11 @@ const DAYS = Math.max(7, Math.min(365, parseInt(flag('days', '90'), 10) || 90));
 const QUERY = `query($login:String!, $from:DateTime!, $to:DateTime!) {
   user(login:$login) {
     followers { totalCount }
+    # Public repos owned by someone else that this user has contributed to.
+    contributedTo: repositoriesContributedTo(
+      first:1, privacy:PUBLIC, includeUserRepositories:false,
+      contributionTypes:[COMMIT, PULL_REQUEST, ISSUE, PULL_REQUEST_REVIEW]
+    ) { totalCount }
     contributionsCollection(from:$from, to:$to) {
       contributionCalendar {
         weeks { contributionDays { date contributionCount contributionLevel } }
@@ -164,19 +169,25 @@ async function fetchAll(login, token) {
         .sort((a, b) => b.size - a.size);
 
     const lt = u.lifetime;
+    const owned = u.repositories.totalCount;
+    const contributed = u.contributedTo.totalCount;
+
     return {
         days,
         langs,
         // Clockwise from the top: Commit, Issue, PullReq, Review, Repo.
+        // Repo counts every repository touched, not just the ones owned, so
+        // work on other people's projects registers here too.
         radar: [
             ['Commit', lt.totalCommitContributions],
             ['Issue', lt.totalIssueContributions],
             ['PullReq', lt.totalPullRequestContributions],
             ['Review', lt.totalPullRequestReviewContributions],
-            ['Repo', u.repositories.totalCount],
+            ['Repo', owned + contributed],
         ],
         stats: {
-            repos: u.repositories.totalCount,
+            repos: owned,
+            contributed,
             stars: repos.reduce((s, r) => s + r.stargazerCount, 0),
             forks: repos.reduce((s, r) => s + r.forkCount, 0),
             followers: u.followers.totalCount,
@@ -206,9 +217,9 @@ function mockAll() {
         ],
         radar: [
             ['Commit', 486], ['Issue', 27], ['PullReq', 39],
-            ['Review', 12], ['Repo', 14],
+            ['Review', 12], ['Repo', 23],
         ],
-        stats: { repos: 14, stars: 37, forks: 6, followers: 21 },
+        stats: { repos: 14, contributed: 9, stars: 37, forks: 6, followers: 21 },
     };
 }
 
@@ -472,6 +483,7 @@ function render(data, { dark, animate, title }) {
 
     const items = [
         ['Repos', stats.repos],
+        ['Contributed', stats.contributed],
         ['Stars', stats.stars],
         ['Forks', stats.forks],
         ['Followers', stats.followers],
