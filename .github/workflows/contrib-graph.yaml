@@ -1,0 +1,39 @@
+name: Contribution Graph
+
+on:
+  schedule: # 18:00 UTC daily
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: render-contribution-graph
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: yoshi389111/github-profile-3d-contrib@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      # The action hardcodes its output to ./profile-3d-contrib and emits
+      # every style. Keep only the one we embed, under our own folder name.
+      - name: Relocate generated graph
+        run: |
+          mkdir -p assets/contrib-graph
+          mv profile-3d-contrib/profile-green-animate.svg \
+             assets/contrib-graph/contributions-3d.svg
+          rm -rf profile-3d-contrib
+
+      - name: Commit & Push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -A .
+          if git commit -m "chore: refresh contribution graph"; then
+            git push
+          fi
