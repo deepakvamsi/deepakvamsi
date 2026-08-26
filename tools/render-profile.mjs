@@ -10,7 +10,6 @@
 //   GITHUB_TOKEN=... node tools/render-profile.mjs --user deepakvamsi
 //   node tools/render-profile.mjs --mock          # synthetic data, no token
 
-const DAYS = 30;
 const TOP_N = 6; // languages listed individually; the rest fold into "Other"
 
 // ---- canvas -----------------------------------------------------------
@@ -20,12 +19,31 @@ const PAD = 28;
 const SPLIT = 356; // y of the divider between the map/radar row and the rest
 
 // ---- isometric map ----------------------------------------------------
-const TILE_W = 34;
-const TILE_H = 19;
-const MAX_H = 72;
+// Tile size is derived from the number of week-columns so the map fills the
+// left half at 30 days and still fits at 90+. Set by fitTiles() before render.
+let TILE_W = 34;
+let TILE_H = 19;
+let MAX_H = 72;
 const MIN_H = 4;
 const ISO_CX = 268; // centre of the map column
 const ISO_TOP = 74; // y of the tallest possible bar's apex
+const ISO_MAX_W = 452; // must clear the radar, which starts around x=582
+const ISO_MAX_H = 250; // must clear the divider at y=356
+
+const MIN_BAR = 30; // shortest acceptable tallest-bar, so relief stays readable
+
+function fitTiles(cols) {
+    // Isometric extent for a cols x 7 grid, in units of TILE_W and TILE_H.
+    const units = (cols - 1 + 6) / 2 + 1;
+
+    // Width budget, and a height budget that still leaves room for the bars.
+    const byWidth = ISO_MAX_W / units;
+    const byHeight = ((ISO_MAX_H - MIN_BAR) / units) * (34 / 19);
+
+    TILE_W = Math.min(34, byWidth, byHeight);
+    TILE_H = TILE_W * (19 / 34);
+    MAX_H = Math.min(72, Math.max(MIN_BAR, ISO_MAX_H - units * TILE_H));
+}
 
 // ---- radar ------------------------------------------------------------
 const RAD_CX = 726;
@@ -57,6 +75,8 @@ const flag = (n, d) => {
     return i >= 0 && args[i + 1] ? args[i + 1] : d;
 };
 const has = (n) => args.includes(`--${n}`);
+
+const DAYS = Math.max(7, Math.min(365, parseInt(flag('days', '90'), 10) || 90));
 
 // ---------------------------------------------------------------- data
 
@@ -253,6 +273,8 @@ function isoMap(days, t, animate) {
         const slot = shift + i;
         return { ...d, col: Math.floor(slot / 7), row: slot % 7 };
     });
+
+    fitTiles(Math.max(...cells.map((c) => c.col)) + 1);
 
     const xs = cells.map((c) => (c.col - c.row) * (TILE_W / 2));
     const minX = Math.min(...xs) - TILE_W / 2;
@@ -518,7 +540,7 @@ const data = has('mock')
 const { mkdirSync, writeFileSync } = await import('fs');
 const { dirname } = await import('path');
 
-const title = `@${user}`;
+const title = `@${user} — last ${DAYS} days`;
 for (const [suffix, dark] of [
     ['', false],
     ['-dark', true],

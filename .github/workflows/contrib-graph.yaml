@@ -29,7 +29,7 @@ jobs:
       - name: Render profile graphic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node tools/render-profile.mjs --user "${{ github.repository_owner }}"
+        run: node tools/render-profile.mjs --user "${{ github.repository_owner }}" --days 90
 
       - name: Commit & Push
         run: |
