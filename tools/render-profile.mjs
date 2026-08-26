@@ -147,11 +147,13 @@ async function fetchAll(login, token) {
     return {
         days,
         langs,
+        // Clockwise from the top: Commit, Issue, PullReq, Review, Repo.
         radar: [
-            ['Commits', lt.totalCommitContributions],
-            ['PRs', lt.totalPullRequestContributions],
-            ['Reviews', lt.totalPullRequestReviewContributions],
-            ['Issues', lt.totalIssueContributions],
+            ['Commit', lt.totalCommitContributions],
+            ['Issue', lt.totalIssueContributions],
+            ['PullReq', lt.totalPullRequestContributions],
+            ['Review', lt.totalPullRequestReviewContributions],
+            ['Repo', u.repositories.totalCount],
         ],
         stats: {
             repos: u.repositories.totalCount,
@@ -182,7 +184,10 @@ function mockAll() {
             { name: 'Jupyter Notebook', size: 83000, color: '#DA5B0B' },
             { name: 'TypeScript', size: 38000, color: '#3178c6' },
         ],
-        radar: [['Commits', 486], ['PRs', 39], ['Reviews', 12], ['Issues', 27]],
+        radar: [
+            ['Commit', 486], ['Issue', 27], ['PullReq', 39],
+            ['Review', 12], ['Repo', 14],
+        ],
         stats: { repos: 14, stars: 37, forks: 6, followers: 21 },
     };
 }
