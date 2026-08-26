@@ -3,16 +3,7 @@
 - 🌱 I'm currently walking towards  ML 
 - 💞️ I'm looking to collaborate on go
 
-## Last 30 days
-
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/contrib-graph/contributions-3d-dark.svg">
-  <img alt="30-day contribution graph" src="./assets/contrib-graph/contributions-3d.svg">
-</picture>
-
-## Languages & activity
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/contrib-graph/stats-circle-dark.svg">
-  <img alt="Language breakdown and activity stats" src="./assets/contrib-graph/stats-circle.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/contrib-graph/profile-dark.svg">
+  <img alt="Contribution map, activity radar and language breakdown" src="./assets/contrib-graph/profile.svg">
 </picture>

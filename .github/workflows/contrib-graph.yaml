@@ -8,8 +8,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/contrib-graph.yaml
-      - tools/render-contrib.mjs
-      - tools/render-stats.mjs
+      - tools/render-profile.mjs
 
 permissions:
   contents: write
@@ -17,7 +16,7 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-latest
-    name: render-contribution-graph
+    name: render-profile-graphic
     steps:
       - uses: actions/checkout@v4
 
@@ -27,12 +26,10 @@ jobs:
 
       # No third-party action and no dependencies: the renderer lives in this
       # repo, so nothing external executes with the write-scoped token.
-      - name: Render graph
+      - name: Render profile graphic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node tools/render-contrib.mjs --user "${{ github.repository_owner }}"
-          node tools/render-stats.mjs   --user "${{ github.repository_owner }}"
+        run: node tools/render-profile.mjs --user "${{ github.repository_owner }}"
 
       - name: Commit & Push
         run: |
@@ -40,8 +37,8 @@ jobs:
           git config user.email github-actions@github.com
           git add assets/contrib-graph
           if git diff --staged --quiet; then
-            echo "No change to the graph."
+            echo "No change to the graphic."
           else
-            git commit -m "chore: refresh 30-day contribution graph"
+            git commit -m "chore: refresh profile graphic"
             git push
           fi
