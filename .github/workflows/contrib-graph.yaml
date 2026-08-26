@@ -9,6 +9,7 @@ on:
     paths:
       - .github/workflows/contrib-graph.yaml
       - tools/render-contrib.mjs
+      - tools/render-stats.mjs
 
 permissions:
   contents: write
@@ -29,7 +30,9 @@ jobs:
       - name: Render graph
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node tools/render-contrib.mjs --user "${{ github.repository_owner }}"
+        run: |
+          node tools/render-contrib.mjs --user "${{ github.repository_owner }}"
+          node tools/render-stats.mjs   --user "${{ github.repository_owner }}"
 
       - name: Commit & Push
         run: |

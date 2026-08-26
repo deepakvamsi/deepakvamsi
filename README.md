@@ -9,3 +9,10 @@
   <source media="(prefers-color-scheme: dark)" srcset="./assets/contrib-graph/contributions-3d-dark.svg">
   <img alt="30-day contribution graph" src="./assets/contrib-graph/contributions-3d.svg">
 </picture>
+
+## Languages & activity
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/contrib-graph/stats-circle-dark.svg">
+  <img alt="Language breakdown and activity stats" src="./assets/contrib-graph/stats-circle.svg">
+</picture>
