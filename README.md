@@ -3,6 +3,9 @@
 - 🌱 I'm currently walking towards  ML 
 - 💞️ I'm looking to collaborate on go
 
-## My Contributions
+## Last 30 days
 
-![3D contribution graph](./assets/contrib-graph/contributions-3d.svg)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/contrib-graph/contributions-3d-dark.svg">
+  <img alt="30-day contribution graph" src="./assets/contrib-graph/contributions-3d.svg">
+</picture>
